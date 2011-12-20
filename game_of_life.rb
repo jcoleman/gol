@@ -1,6 +1,6 @@
 require 'matrix'
 
-class Matrix
+module GameOfLifeMatrix
 
   def set(row_index, column_index, value)
     @rows[row_index][column_index] = value
@@ -38,11 +38,17 @@ class Runner
   
   #              v - THIS IS AN ARRAY OF ROWS
   def initialize(initial_board)
-    @board = Matrix.rows(initial_board)
+    @board = Runner.create_new_board(initial_board)
+  end
+
+  def self.create_new_board(rows)
+    board = Matrix.rows(rows)
+    board.extend GameOfLifeMatrix
+    return board
   end
 
   def next_step!
-    new_board = Matrix.rows(@board.to_a)
+    new_board = Runner.create_new_board(@board.to_a)
 
     @board.each_with_index do |value, row, column|
       new_board.set(row, column, new_value_for(
